@@ -1,13 +1,13 @@
-> This repository contains code for systems running RAIDiator OS 4.x on a
+> This repository contains code for systems running RAIDiator OS 4.x on a 
 > x86_64 (Intel) CPU.
 
-# Apache 2.2.34
+# OpenSSH 6.6p1
 
 ## Purpose
-This package will update the version of the Apache web server on the ReadyNAS to
-version 2.2.34.
-This version supports TLS v1.2 and thus will make the web interface of the ReadyNAS
-work with modern browsers again.
+This package will update the OpenSSH server and Client on the ReadyNAS to 
+version 6.6p1.
+This version supports newer key exchange algorithms and has support for ssh keys
+using the ED25519 format.
 
 ## Warranty
 Everything provided here is provided "as is" with no guarantees expressed or implied.
@@ -20,8 +20,8 @@ Use at your own risk.
 **Note:** You'll most likely need to use Firefox
 
 The preferred method of installation is through the web interface of the ReadyNAS.
-This method will install all needed packages and also automatically updates the 
-`httpd.conf` in `/etc/frontview/apache` to only use TLSv1.2 connections.
+This method will install all needed packages and also automatically restarts the SSH
+server process.
 
 **Note:** Although this looks like an add-on it **won't show up** in the list of
 installed add-ons after installation. The reason for this is that only system 
@@ -54,38 +54,22 @@ through the web interface.
 1) Install the Debian packages:
 
    ```
-   dpkg -i --force-all liblzma*.deb libselinux*.deb
-   dpkg -i --force-all dpkg*.deb
-   dpkg -i --force-all locales_*.deb libc6_*.deb libc-bin_*.deb
-   dpkg -i --force-all libc6-*.deb findutils*.deb
-   locale-gen
-   dpkg -i multiarch*.deb
-   dpkg -i libssl*.deb libapr*.deb libcap*.deb libpcre*.deb
-   dpkg -i --force-confold --force-overwrite apache2*.deb
+   dpkg -i --force-all *.deb
    ```
 
-1) Remove the outdated protocols from Apache's confiuguration
+1) Manually restart the SSH server:
 
-   ``` bash
-   sed -ri 's/^(SSLProtocol.*)$/\1 -TLSv1 -TLSv1.1/g' /etc/frontview/apache/httpd.conf
+   ```
+   /etc/init.d/ssh restart
    ```
 
-1) Test Apache's configuration
+1) Test that you're still able to login (use a new terminal!)
 
-   ``` bash
-   apachectl -t -f /etc/frontview/apache/httpd.conf
+   ```
+   ssh root@<ip_of_your_readynas>
    ```
 
-1) If there are no erros reported, e.g. the output of step #5 ends with `Syntak ok` restart
-   the Apache web server:
-
-   ``` bash
-   apachectl -k restart -f /etc/frontview/apache/httpd.conf
-   ```
-
-#### Testing
-You can use the provided `ssl-cipher-test.sh` to check what TLS ciphers are supported by
-your ReadyNAS before and after the update.
+1) If everything works you're done!
 
 #### Disclaimer
 I'm not affiliated with NETGEAR Inc. in any way. I just happen to be a ReadyNAS user who likes

@@ -1,8 +1,5 @@
 # R4 Binaries
 
-# WARNING ! WARNING ! WARNING !
-## DON'T USE THE APACHE2 UPDATE FOR NOW. IT WILL BREAK YOUR READYNAS!
-
 This repository holds binaries for installation on ReadyNAS systems
 running RAIDiator 4.x.
 
